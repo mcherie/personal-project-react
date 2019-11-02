@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import Result from "./result";
+// import fakeData from "../fakeData.json"
 
 export const Search = () => {
   const [username, setUsername] = useState("");
   const [results, setResults] = useState({});
 
-
   const forkedRepos = async (full_name) => {
     const forkedRepos_URL = `https://api.github.com/repos/${full_name}`;
     const getForkedRepos = await fetch(forkedRepos_URL);
     const forkedReposJson = await getForkedRepos.json()
-    console.log("parent full name is", forkedReposJson.parent.full_name);
-    return forkedReposJson.parent.full_name;
+    // console.log("parent full name is", forkedReposJson.parent.full_name);
+    const forkParent = forkedReposJson.parent.full_name
+    const forkNameAndParent = { full_name, forkParent}
+    return forkNameAndParent;
   }
 
   const handleGetUser = async username => {
@@ -23,10 +25,14 @@ export const Search = () => {
       const reposResponse = await fetch(repos_URL);
       const receivedRepos = await reposResponse.json();
       const forkedProjects = receivedRepos.filter(item => item.fork === true);
-      // console.log("forkeds are:", forkedProjects);
-      const parentRepoNames = forkedProjects.map(each => {
+      console.log("forkeds are:", forkedProjects);
+      const parentRepoNames = await Promise.all(forkedProjects.map(each => {
+        // console.log("each.full_name is", each.full_name )
         return forkedRepos(each.full_name);
-      });
+      }));
+      console.log("parentRepoNames is", parentRepoNames)
+      // console.log("eachForkedRepo is", eachForkedRepo)
+
 
       // Below is to get Pull Requests
       const eventsResponse = await fetch(events_URL);
@@ -34,7 +40,7 @@ export const Search = () => {
       const pullRequests = receivedEvents.filter(
         item => item.type === "PullRequestEvent"
       );
-      // console.log("PRs are:", pullRequests);
+      console.log("PRs are:", pullRequests);
 
       const results = { username, parentRepoNames, pullRequests };
 
@@ -66,6 +72,7 @@ export const Search = () => {
 
   const displayResult = () => {
     return <Result result={results} />;
+    // return <Result result={fakeData} />;
   };
 
   return (
