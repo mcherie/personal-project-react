@@ -13,7 +13,9 @@ export const Result = ({ result }) => {
           {parentRepoNames.map(each => {
             return (
               <li key={each.full_name}>
-                <a href={`https://api.github.com/users/${each.full_name}`} target="_blank" >{each.full_name}</a>
+                {/* <li> */}
+
+                <a href={`https://github.com/${each.full_name}`} target="_blank" >{each.full_name}</a>
                 <p>Forked from: {each.forkParent}</p>
               </li>
             )
@@ -25,13 +27,15 @@ export const Result = ({ result }) => {
         <h3> Recent Pull Requests </h3>
         {pullRequests.map(each => {
           return (
-            <div key={each.repo.name}>
-              <a href={each.payload.pull_request.url} target="_blank">{each.repo.name}</a>
-              <h5>Status: {each.payload.action}</h5>
+            <div key={each.title}>
+              {/* <div> */}
+              <a href={each.html_url} target="_blank">{each.title}</a>
+              <h5>Status: {each.state}</h5>
             </div>
           )
         })}
       </div>
+
 
     </div>
   );
