@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default (username, forkedProjects, pullRequests) => {
+export const Result = (username) => {
 
 return (
 
@@ -13,10 +13,10 @@ return (
 
     <h4> Recent Pull Requests </h4>
 
-
   </div>
 
 )
 
 }
 
+export default Result;
