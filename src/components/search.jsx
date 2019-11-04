@@ -10,7 +10,6 @@ export const Search = () => {
     const forkedRepos_URL = `https://api.github.com/repos/${full_name}`;
     const getForkedRepos = await fetch(forkedRepos_URL);
     const forkedReposJson = await getForkedRepos.json()
-    console.log("parent full name is", forkedReposJson.parent.full_name);
     const forkParent = forkedReposJson.parent.full_name
     const forkNameAndParent = { full_name, forkParent}
     return forkNameAndParent;
@@ -25,13 +24,9 @@ export const Search = () => {
       const reposResponse = await fetch(repos_URL);
       const receivedRepos = await reposResponse.json();
       const forkedProjects = receivedRepos.filter(item => item.fork === true);
-      // console.log("forkeds are:", forkedProjects);
       const parentRepoNames = await Promise.all(forkedProjects.map(each => {
-        // console.log("each.full_name is", each.full_name )
         return forkedRepos(each.full_name);
       }));
-      console.log("parentRepoNames is", parentRepoNames)
-      // console.log("eachForkedRepo is", eachForkedRepo)
 
 
       // ---------------------------------------------------
@@ -42,7 +37,6 @@ export const Search = () => {
       const allPullRequests = receivedEvents.filter(
         item => item.type === "PullRequestEvent"
       );
-      console.log("PRs are:", allPullRequests);
 
       const uniquePullRequests = [];
 
@@ -60,7 +54,6 @@ export const Search = () => {
       });
       const pullRequests = await Promise.all(initialPullRequests)
 
-      console.log("pullRequests is:", pullRequests)
 
       const results = { username, parentRepoNames, pullRequests };
 
