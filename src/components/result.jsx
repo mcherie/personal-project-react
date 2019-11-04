@@ -2,19 +2,22 @@ import React from "react";
 import Card from './Card';
 import './result.css';
 
-export const Result = ({ username, repos, pullRequests }) => {
+export const Result = ({repos, pullRequests, userName}) => {
+  debugger;
   return (
     <section className="result">
-      <h1 className="username-header"> {username} </h1>
+      <h1 className="username-header"> {userName} </h1>
         <Card >
-          {console.log("username is:", username)}
+        {console.log("username is:", userName)}
             <div>
             <h2> Recent Forks </h2>
-          {console.log("repos is: 1", repos)}
+          {
+            console.log("repos is: 1", repos)
+            }
           {repos.length > 0 ? repos.map((eachFork, index) => {
                 return (
-                  <Card >
-                  <div key={index}>
+                  <Card key={index}>
+                  <div >
                     <h4 href={`https://github.com/${eachFork.repoName}`} target="_blank">{eachFork.repoName}</h4>
                     <p className="subtitle">Forked from: {eachFork.forkParent}</p>
                   </div>
@@ -30,8 +33,8 @@ export const Result = ({ username, repos, pullRequests }) => {
           {console.log("pullRequests is: 2", pullRequests)}
             {pullRequests.length > 0 ? pullRequests.map((eachPR, index) => {
               return (
-                <Card >
-                <div key={index}>
+                <Card key={index}>
+                <div >
                   <a href={eachPR.html_url} target="_blank">{eachPR.title}</a>
                   <h5>Status: {eachPR.state}</h5>
                 </div>

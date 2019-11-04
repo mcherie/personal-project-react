@@ -7,7 +7,6 @@ import LoadingIndicator from "./LoadingIndicator";
 import './search.css';
 
 export const Search = (props) => {
-    // console.log("props is:" , props)
     const [username, setUsername] = useState("venomvendor");
     const {repos, pullRequests} = props;
 
@@ -38,28 +37,18 @@ export const Search = (props) => {
     };
 
     const displayResult = (repos, pullRequests) => {
+        debugger;
         return <Result repos={repos} pullRequests={pullRequests} userName={username}/>;
     };
 
     const isFetchingRepos = repos.isFetching;
     const isFetchingPRs = pullRequests.isFetching;
-    // const fetchReposSuccess = !isFetchingRepos && !repos.error && Object.keys(repos.data).length > 0;
     const fetchReposSuccess = !isFetchingRepos && Object.keys(repos.data).length > 0;
-    // const fetchingPRsSuccess = !isFetchingPRs && !pullRequests.error && Object.keys(pullRequests.data).length > 0;
     const fetchingPRsSuccess = !isFetchingPRs && Object.keys(pullRequests.data).length > 0;
-    // const fetchRepos = !fetchReposSuccess;
-    // const fetchPRs = !fetchingPRsSuccess;
 
     return (
         <div>
-            {/* {(fetchRepos || fetchPRs) && searchUser()} */}
-            {/* {fetchRepos || fetchPRs ? searchUser() : displayResult(repos.data, pullRequests.data)} */}
-
-            {fetchReposSuccess || fetchingPRsSuccess ? displayResult(repos.data, pullRequests.data) : searchUser()}
-
-            {/* {fetchReposSuccess && fetchingPRsSuccess && displayResult(repos.data, pullRequests.data)} */}
-            {/* {fetchReposSuccess && fetchingPRsSuccess ? displayResult(repos.data, pullRequests.data): null} */}
-            {/* {(isFetchingRepos || isFetchingPRs) && <LoadingIndicator/>} */}
+            {fetchReposSuccess && fetchingPRsSuccess ? displayResult(repos.data, pullRequests.data) : searchUser()}
             {(isFetchingRepos || isFetchingPRs) ? <LoadingIndicator /> : null}
         </div>
     );
@@ -71,8 +60,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchForkedRepos: (full_name) => dispatch(actions.fetchForkedRepos(full_name)),
-        fetchPullRequests: (full_name) => dispatch(actions.fetchPullRequests(full_name))
+        fetchForkedRepos: (username) => dispatch(actions.fetchForkedRepos(username)),
+        fetchPullRequests: (username) => dispatch(actions.fetchPullRequests(username))
     };
 };
 
