@@ -3,7 +3,6 @@ import Card from './Card';
 import './result.css';
 
 export const Result = ({repos, pullRequests, userName}) => {
-  debugger;
   return (
     <section className="result">
       <h1 className="username-header"> {userName} </h1>

@@ -5,7 +5,6 @@ export const asyncFetchRepos = (state = {
     error: false,
     data: {}
 }, action) => {
-    debugger;
     switch (action.type) {
         case actions.ACTION_TYPES.ASYNC_FETCH_SUCCESS_GET_REPOS:
             return {
@@ -25,7 +24,6 @@ export const asyncFetchPullRequests = (state = {
     error: false,
     data: {}
 }, action) => {
-    debugger;
     switch (action.type) {
         case actions.ACTION_TYPES.ASYNC_FETCH_SUCCESS_GET_PULL_REQUESTS:
             return {

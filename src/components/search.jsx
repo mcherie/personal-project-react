@@ -37,7 +37,6 @@ export const Search = (props) => {
     };
 
     const displayResult = (repos, pullRequests) => {
-        debugger;
         return <Result repos={repos} pullRequests={pullRequests} userName={username}/>;
     };
 
