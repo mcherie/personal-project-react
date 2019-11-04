@@ -1,102 +1,79 @@
-import React, { useState } from "react";
-import Result from "./result";
+import React, {useState} from "react";
+import {connect} from 'react-redux';
+import Result from "./Result";
+import * as actions from './../redux/action';
+import Card from './Card';
+import LoadingIndicator from "./LoadingIndicator";
+import './search.css';
 
-export const Search = () => {
-  const [username, setUsername] = useState("");
-  const [results, setResults] = useState({});
+export const Search = (props) => {
+    // console.log("props is:" , props)
+    const [username, setUsername] = useState("venomvendor");
+    const {repos, pullRequests} = props;
 
-  // Below is helper function to get parent of forked repos
-  const forkedRepos = async (full_name) => {
-    const forkedRepos_URL = `https://api.github.com/repos/${full_name}`;
-    const getForkedRepos = await fetch(forkedRepos_URL);
-    const forkedReposJson = await getForkedRepos.json()
-    console.log("parent full name is", forkedReposJson.parent.full_name);
-    const forkParent = forkedReposJson.parent.full_name
-    const forkNameAndParent = { full_name, forkParent}
-    return forkNameAndParent;
-  }
+    const submitHandler = (event) => {
+        event.preventDefault(); // to prevent form from submitting to default and do below instead
+        props.fetchForkedRepos(username);
+        props.fetchPullRequests(username);
+    };
 
-  const handleGetUser = async username => {
-    try {
+    const searchUser = () => {
+        return (
+            <section className="search">
+                <Card className="search-card">
+                    <form onSubmit={submitHandler}>
+                        <p>Github Username:</p>
+                        <input value={username} className="user-input" onChange={e => setUsername(e.target.value)}/>
+                        <button
+                            type="submit"
+                            className="submit-btn"
+                            disabled={!username.length}
+                        >
+                            GET USER
+                        </button>
+                    </form>
+                </Card>
+            </section>
+        );
+    };
 
-      // ------------------------------------------------
-      // Below is to get the FORKED REPOS
-      const repos_URL = `https://api.github.com/users/${username}/repos`;
-      const reposResponse = await fetch(repos_URL);
-      const receivedRepos = await reposResponse.json();
-      const forkedProjects = receivedRepos.filter(item => item.fork === true);
-      // console.log("forkeds are:", forkedProjects);
-      const parentRepoNames = await Promise.all(forkedProjects.map(each => {
-        // console.log("each.full_name is", each.full_name )
-        return forkedRepos(each.full_name);
-      }));
-      console.log("parentRepoNames is", parentRepoNames)
-      // console.log("eachForkedRepo is", eachForkedRepo)
+    const displayResult = (repos, pullRequests) => {
+        return <Result repos={repos} pullRequests={pullRequests} userName={username}/>;
+    };
 
+    const isFetchingRepos = repos.isFetching;
+    const isFetchingPRs = pullRequests.isFetching;
+    // const fetchReposSuccess = !isFetchingRepos && !repos.error && Object.keys(repos.data).length > 0;
+    const fetchReposSuccess = !isFetchingRepos && Object.keys(repos.data).length > 0;
+    // const fetchingPRsSuccess = !isFetchingPRs && !pullRequests.error && Object.keys(pullRequests.data).length > 0;
+    const fetchingPRsSuccess = !isFetchingPRs && Object.keys(pullRequests.data).length > 0;
+    // const fetchRepos = !fetchReposSuccess;
+    // const fetchPRs = !fetchingPRsSuccess;
 
-      // ---------------------------------------------------
-      // Below is to get Pull Requests
-      const events_URL = `https://api.github.com/users/${username}/events`;
-      const eventsResponse = await fetch(events_URL);
-      const receivedEvents = await eventsResponse.json();
-      const allPullRequests = receivedEvents.filter(
-        item => item.type === "PullRequestEvent"
-      );
-      console.log("PRs are:", allPullRequests);
-
-      const uniquePullRequests = [];
-
-      allPullRequests.forEach(item => {
-        const url = item.payload.pull_request.url;
-        if (uniquePullRequests.indexOf(url) === -1) {
-          uniquePullRequests.push(url);
-        }
-      });
-
-      const initialPullRequests = uniquePullRequests.map(async item => {
-        const response = await fetch(item);
-        const responseObj = await response.json();
-        return responseObj
-      });
-      const pullRequests = await Promise.all(initialPullRequests)
-
-      console.log("pullRequests is:", pullRequests)
-
-      const results = { username, parentRepoNames, pullRequests };
-
-      setResults(results);
-
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-
-  const searchUser = () => {
     return (
-      <div>
-        <p>Github Username:</p>
-        <input value={username} onChange={e => setUsername(e.target.value)} />
         <div>
-          <button
-            type="button"
-            onClick={() => {
-              handleGetUser(username);
-            }}
-          >
-            GET USER
-          </button>
+            {/* {(fetchRepos || fetchPRs) && searchUser()} */}
+            {/* {fetchRepos || fetchPRs ? searchUser() : displayResult(repos.data, pullRequests.data)} */}
+
+            {fetchReposSuccess || fetchingPRsSuccess ? displayResult(repos.data, pullRequests.data) : searchUser()}
+
+            {/* {fetchReposSuccess && fetchingPRsSuccess && displayResult(repos.data, pullRequests.data)} */}
+            {/* {fetchReposSuccess && fetchingPRsSuccess ? displayResult(repos.data, pullRequests.data): null} */}
+            {/* {(isFetchingRepos || isFetchingPRs) && <LoadingIndicator/>} */}
+            {(isFetchingRepos || isFetchingPRs) ? <LoadingIndicator /> : null}
         </div>
-      </div>
     );
-  };
-
-  const displayResult = () => {
-    return <Result result={results} />;
-  };
-
-  return (
-    <div>{Object.keys(results).length ? displayResult() : searchUser()}</div>
-  );
 };
 
-export default Search;
+const mapStateToProps = (state) => {
+    return state;
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchForkedRepos: (full_name) => dispatch(actions.fetchForkedRepos(full_name)),
+        fetchPullRequests: (full_name) => dispatch(actions.fetchPullRequests(full_name))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Search);
