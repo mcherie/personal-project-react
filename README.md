@@ -1,6 +1,9 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## A simple form that allows you to fetch your (using your username) most recent forked repos and pull requests
+## Github API search
+
+A simple form that allows you to fetch your most recent forked repos and pull requests (using your username) 
+
 
 ## Running the app
 

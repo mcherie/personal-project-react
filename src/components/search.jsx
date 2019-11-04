@@ -7,7 +7,7 @@ import LoadingIndicator from "./LoadingIndicator";
 import './search.css';
 
 export const Search = (props) => {
-    const [username, setUsername] = useState("venomvendor");
+    const [username, setUsername] = useState("");
     const {repos, pullRequests} = props;
 
     const submitHandler = (event) => {

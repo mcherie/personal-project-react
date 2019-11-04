@@ -23,8 +23,7 @@ export const asyncFetchSuccessGetPullRequests = (data) => ({
 });
 
 const fetchRepoDetails = async (repoName) => {
-    const getForkedRepos = await fetch(`https://api.github.com/repos/${repoName}?client_id=b58daa635e758f52a54c&client_secret=30ee05e2325325ca9cd85a8256df6a397f5ef677
-`);
+    const getForkedRepos = await fetch(`https://api.github.com/repos/${repoName}`);
     const forkedReposJson = await getForkedRepos.json();
     const forkParent = forkedReposJson.parent.full_name;
     return {repoName, forkParent};
@@ -33,8 +32,7 @@ const fetchRepoDetails = async (repoName) => {
 export const fetchForkedRepos = (username) => async (dispatch) => {
     try {
         dispatch(asyncFetchGetRepos());
-        const repos_URL = `https://api.github.com/users/${username}/repos?client_id=b58daa635e758f52a54c&client_secret=30ee05e2325325ca9cd85a8256df6a397f5ef677
-`;
+        const repos_URL = `https://api.github.com/users/${username}/repos`;
         const reposResponse = await fetch(repos_URL);
         const receivedRepos = await reposResponse.json();
         const forkedProjects = receivedRepos.filter(item => item.fork);
@@ -51,8 +49,7 @@ export const fetchForkedRepos = (username) => async (dispatch) => {
 export const fetchPullRequests = (username) => async (dispatch) => {
     try {
         dispatch(asyncFetchGetPullRequests());
-        const events_URL = `https://api.github.com/users/${username}/events?client_id=b58daa635e758f52a54c&client_secret=30ee05e2325325ca9cd85a8256df6a397f5ef677
-`;
+        const events_URL = `https://api.github.com/users/${username}/events`;
         const eventsResponse = await fetch(events_URL);
         const receivedEvents = await eventsResponse.json();
         const allPullRequests = receivedEvents.filter(event => event.type === "PullRequestEvent");
