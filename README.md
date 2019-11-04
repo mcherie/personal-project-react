@@ -22,6 +22,13 @@ A simple form that allows you to fetch your most recent forked repos and pull re
 - react-redux
 - redux-thunk
 
+
+![Search]('./src/assets/search-image.png')
+
+
+![Results]('./src/assets/results-image.png')
+
+
 ### `yarn start`
 
 Runs the app in the development mode.<br />

@@ -18,7 +18,7 @@ export const Result = ({repos, pullRequests, userName}) => {
                 return (
                   <Card key={index}>
                   <div >
-                    <h4 href={`https://github.com/${eachFork.repoName}`} target="_blank">{eachFork.repoName}</h4>
+                    <a href={`https://github.com/${eachFork.repoName}`} target="_blank">{eachFork.repoName}</a>
                     <p className="subtitle">Forked from: {eachFork.forkParent}</p>
                   </div>
                   </Card>
