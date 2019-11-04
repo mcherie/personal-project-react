@@ -23,10 +23,10 @@ A simple form that allows you to fetch your most recent forked repos and pull re
 - redux-thunk
 
 
-![Search]('./src/assets/search-image.png')
+![Search](/src/assets/search-image.png)
 
 
-![Results]('./src/assets/results-image.png')
+![Results](/src/assets/results-image.png)
 
 
 ### `yarn start`
